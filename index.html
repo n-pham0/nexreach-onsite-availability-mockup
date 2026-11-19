@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NexReach – Onsite availability panel (mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Approximation of the DART tokens used in nexreach-ui. Not the real values. */
+  :root {
+    --text-contrast-high: #161c26;
+    --text-contrast-medium: #3f4a5a;
+    --text-contrast-low: #66717f;
+    --graphic-contrast-low: #dde1e7;
+    --background-page: #f4f5f8;
+    --background-paper: #ffffff;
+    --text-data-blue: #1d5fd1;
+    --background-prominent: #eaf1fd;
+    --text-status-positive: #1b7a43;
+    --background-positive: #e6f4ec;
+    --text-status-caution: #a85d00;
+    --background-caution: #fff1dd;
+    --text-status-negative: #b3261e;
+    --background-negative: #fdeceb;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "DM Sans", system-ui, sans-serif; background: var(--background-page);
+         color: var(--text-contrast-high); font-size: 14px; line-height: 20px; }
+  .banner { background: #1f2937; color: #fff; padding: 8px 24px; font-size: 12px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .banner strong { color: #ffd479; }
+  .banner label { display: inline-flex; gap: 6px; align-items: center; }
+  .banner select { font: inherit; padding: 2px 6px; border-radius: 4px; border: 0; }
+  nav { background: #fff; border-bottom: 1px solid var(--graphic-contrast-low); padding: 10px 24px; display: flex; align-items: center; gap: 24px; }
+  nav .logo { font-weight: 700; font-size: 16px; color: var(--text-data-blue); }
+  nav span { color: var(--text-contrast-low); }
+  main { max-width: 1180px; margin: 0 auto; padding: 20px 24px 48px; }
+  .callbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .callbar h1 { font-size: 20px; line-height: 28px; margin: 0; }
+  .chip { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: var(--background-prominent); color: var(--text-data-blue); }
+  .grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .paper { background: var(--background-paper); border-radius: .25rem; border: 1px solid var(--graphic-contrast-low); }
+  .pad { padding: 16px; }
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .label { color: var(--text-contrast-low); font-size: 14px; }
+  .value { color: var(--text-contrast-high); }
+  .kv { display: grid; grid-template-columns: 130px 1fr; gap: 6px 12px; }
+  h2 { font-size: 16px; line-height: 24px; margin: 0; }
+  .link { color: var(--text-data-blue); background: none; border: 0; font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; padding: 0; }
+  .link:hover { text-decoration: underline; }
+  .appt { padding: 8px 16px; display: flex; gap: 12px; align-items: center; }
+  .appt b { font-weight: 500; }
+
+  /* The new panel */
+  .panel-head { padding: 12px 16px; border-bottom: 1px solid var(--graphic-contrast-low); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .panel-head .title { display: flex; gap: 8px; align-items: center; font-weight: 700; }
+  .status { padding: 1px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+  .status.open { background: var(--background-positive); color: var(--text-status-positive); }
+  .status.limited { background: var(--background-caution); color: var(--text-status-caution); }
+  .status.none { background: var(--background-negative); color: var(--text-status-negative); }
+  .zipbar { padding: 10px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid var(--graphic-contrast-low); }
+  .zipbar input { font: inherit; width: 88px; padding: 4px 8px; border: 1px solid var(--graphic-contrast-low); border-radius: 4px; }
+  .btn { font: inherit; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 4px; border: 1px solid var(--graphic-contrast-low); background: #fff; color: var(--text-contrast-medium); cursor: pointer; }
+  .btn:hover { background: var(--background-prominent); border-color: var(--text-data-blue); color: var(--text-data-blue); }
+  .summary { padding: 14px 16px; font-size: 14px; }
+  .summary .big { font-size: 15px; line-height: 22px; }
+  .summary b { font-weight: 700; }
+  .meta { padding: 0 16px 12px; color: var(--text-contrast-low); font-size: 12px; }
+  .viewonly { margin: 0 16px 14px; padding: 8px 12px; background: #f7f8fa; border-radius: 4px; color: var(--text-contrast-medium); font-size: 12px; }
+  .detail { border-top: 1px solid var(--graphic-contrast-low); padding: 12px 16px 16px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; min-width: 520px; }
+  th, td { border-bottom: 1px solid var(--graphic-contrast-low); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { color: var(--text-contrast-low); font-weight: 500; white-space: nowrap; }
+  td.tech { font-weight: 500; white-space: nowrap; }
+  td .slot { display: block; white-space: nowrap; }
+  td.empty { color: var(--text-contrast-low); }
+  .daysum th, .daysum td { background: #fafbfc; }
+  .skeleton { height: 12px; border-radius: 4px; background: linear-gradient(90deg, #eceff3, #f7f8fa, #eceff3); background-size: 200% 100%; animation: sh 1.2s infinite; }
+  @keyframes sh { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  .err { color: var(--text-status-negative); font-weight: 500; }
+  .placeholder { margin-top: 16px; padding: 14px 16px; color: var(--text-contrast-low); border-style: dashed; }
+  details.notes { margin-top: 24px; }
+  details.notes summary { cursor: pointer; font-weight: 700; }
+  details.notes ul { margin: 8px 0 0; padding-left: 20px; color: var(--text-contrast-medium); }
+  details.notes li { margin: 4px 0; }
+  .callout { outline: 2px dashed var(--text-data-blue); outline-offset: 4px; }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <span><strong>MOCKUP</strong> · illustrative data only · fictional site and technicians · not wired to OSS or Hub</span>
+  <label>Panel state
+    <select id="state">
+      <option value="open">Open slots</option>
+      <option value="limited">Limited slots</option>
+      <option value="none">No availability</option>
+      <option value="loading">Loading</option>
+      <option value="error">Unavailable</option>
+    </select>
+  </label>
+  <label>Call type
+    <select id="calltype">
+      <option value="offsite">Offsite outbound call</option>
+      <option value="inbound">Inbound call</option>
+    </select>
+  </label>
+</div>
+
+<nav><span class="logo">NexReach</span><span>Dashboard</span><span>Search</span><span>Call history</span></nav>
+
+<main>
+  <div class="callbar">
+    <h1>(555) 010-0142</h1>
+    <span class="chip" id="callchip">Offsite outbound</span>
+    <span class="label">Riverside Family Clinic</span>
+  </div>
+
+  <div class="grid">
+    <section class="paper pad stack" aria-label="Site details">
+      <div class="row" style="justify-content: space-between">
+        <h2>Site details</h2>
+        <button class="link" type="button">Edit</button>
+      </div>
+      <div class="kv">
+        <span class="label">Site name</span><span class="value">Riverside Family Clinic</span>
+        <span class="label">Address</span><span class="value">1200 Example Ave, Springfield, NC 27401</span>
+        <span class="label">Primary contact</span><span class="value">Front office</span>
+        <span class="label">Retrieval method</span><span class="value" id="methodval">OFFSITE</span>
+        <span class="label">Fax</span><span class="value">555-010-0143</span>
+      </div>
+    </section>
+
+    <div class="stack">
+      <div class="paper appt">
+        <span aria-hidden="true">📅</span><b>1 Existing Appointment</b>
+        <button class="link" type="button">View Details</button>
+      </div>
+
+      <!-- NEW -->
+      <section class="paper callout" aria-label="Onsite availability panel" id="panel">
+        <div class="panel-head">
+          <div class="title"><span aria-hidden="true">🗓️</span> Onsite availability <span class="status" id="statuschip"></span></div>
+          <span class="label" style="font-size:12px">View only</span>
+        </div>
+        <div class="zipbar">
+          <span class="label">Provider ZIP</span>
+          <input id="zip" value="27401" inputmode="numeric" maxlength="5" aria-label="Provider ZIP code">
+          <button class="btn" id="refresh" type="button">Check</button>
+          <span class="label" style="font-size:12px">Prefilled from site details</span>
+        </div>
+        <div id="body"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="paper placeholder">Inventory summary and table (unchanged) would appear here, with the Route to Onsite action.</div>
+
+  <details class="notes">
+    <summary>Design notes and assumptions</summary>
+    <ul>
+      <li><b>Purpose:</b> let offsite and inbound agents confirm onsite capacity before offering onsite and routing inventory, so we avoid routing into markets without capacity.</li>
+      <li><b>Read only:</b> no scheduling controls. Booking stays with the onsite team after routing.</li>
+      <li><b>Input:</b> the provider ZIP, prefilled from site details. Market matching is assumed to happen inside the OSS stored procedure that already feeds the grid.</li>
+      <li><b>Data:</b> assumes a new OSS endpoint returning open slots (date, start and end time, technician) for a ZIP and date range. Technician names and counts here are made up.</li>
+      <li><b>Slot length:</b> shown as 2-hour windows for illustration. The real length comes from OSS.</li>
+      <li><b>Status thresholds</b> (Open 15+ slots, Limited 1 to 14, None 0): placeholders to agree with Ops.</li>
+      <li><b>Where it shows:</b> offsite and inbound call views, across retrieval methods. Not shown when an onsite scheduler is already open.</li>
+      <li><b>Not designed yet:</b> refresh cadence, offshore agent visibility rules, and whether technician names are shown to all agent groups.</li>
+    </ul>
+  </details>
+</main>
+
+<script>
+  // Illustrative schedule: day -> technician -> slot start hours (2-hour windows)
+  const DAYS = [
+    { key: "2026-11-23", label: "Mon Nov 23" },
+    { key: "2026-11-24", label: "Tue Nov 24" },
+    { key: "2026-11-25", label: "Wed Nov 25" },
+    { key: "2026-11-26", label: "Thu Nov 26" },
+    { key: "2026-11-27", label: "Fri Nov 27" },
+  ];
+  const SCHEDULES = {
+    open: {
+      "2026-11-23": { "Marcus T.": [8, 10, 14], "Priya S.": [10, 12], "Dana R.": [8, 14] },
+      "2026-11-24": { "Marcus T.": [8, 10], "Luis V.": [10, 12, 14], "Hannah K.": [8, 12] },
+      "2026-11-25": { "Priya S.": [8, 10, 12], "Omar B.": [12, 14], "Dana R.": [10] },
+      "2026-11-26": {},
+      "2026-11-27": { "Luis V.": [8, 10], "Hannah K.": [10] },
+    },
+    limited: {
+      "2026-11-24": { "Luis V.": [10] },
+      "2026-11-25": { "Priya S.": [12, 14] },
+    },
+    none: {},
+  };
+
+  const fmtHour = h => { const hh = ((h + 11) % 12) + 1; return hh + ":00 " + (h < 12 ? "AM" : "PM"); };
+  const fmtSlot = h => fmtHour(h).replace(":00", "").replace(" AM", "").replace(" PM", "") + "–" + fmtHour(h + 2).replace(":00", "");
+
+  const $ = id => document.getElementById(id);
+
+  function summarize(sched) {
+    let slots = 0, techs = new Set(), minH = 99, maxH = 0, days = [];
+    DAYS.forEach(d => {
+      const day = sched[d.key] || {};
+      let n = 0;
+      Object.entries(day).forEach(([t, hrs]) => { hrs.forEach(h => { n++; minH = Math.min(minH, h); maxH = Math.max(maxH, h + 2); }); if (hrs.length) techs.add(t); });
+      if (n) days.push(d);
+      slots += n;
+    });
+    return { slots, techs: techs.size, minH, maxH, first: days[0], last: days[days.length - 1] };
+  }
+
+  let detailOpen = false;
+
+  function renderDetail(sched) {
+    const techs = [...new Set(DAYS.flatMap(d => Object.keys(sched[d.key] || {})))];
+    let html = '<div class="detail"><table><thead><tr><th>Technician</th>' + DAYS.map(d => "<th>" + d.label + "</th>").join("") + "</tr></thead><tbody>";
+    html += '<tr class="daysum"><th>Open slots</th>' + DAYS.map(d => {
+      const n = Object.values(sched[d.key] || {}).reduce((a, h) => a + h.length, 0);
+      return "<td>" + (n || "—") + "</td>";
+    }).join("") + "</tr>";
+    techs.forEach(t => {
+      html += '<tr><td class="tech">' + t + "</td>" + DAYS.map(d => {
+        const hrs = (sched[d.key] || {})[t];
+        return hrs && hrs.length ? "<td>" + hrs.map(h => '<span class="slot">' + fmtSlot(h) + "</span>").join("") + "</td>" : '<td class="empty">—</td>';
+      }).join("") + "</tr>";
+    });
+    html += "</tbody></table><p class=\"label\" style=\"font-size:12px;margin:8px 0 0\">Thu Nov 26 is a holiday in this example. Times are in the site's local time zone.</p></div>";
+    return html;
+  }
+
+  function render() {
+    const state = $("state").value, zip = $("zip").value || "—";
+    const body = $("body"), chip = $("statuschip");
+    chip.className = "status"; chip.textContent = "";
+    if (state === "loading") {
+      body.innerHTML = '<div class="summary stack"><div class="skeleton" style="width:90%"></div><div class="skeleton" style="width:70%"></div></div>';
+      return;
+    }
+    if (state === "error") {
+      body.innerHTML = '<div class="summary"><span class="err">Onsite availability unavailable.</span> <button class="link" type="button" id="retry">Retry</button><div class="label" style="margin-top:4px">You can still route inventory to Onsite.</div></div>';
+      return;
+    }
+    const sched = SCHEDULES[state];
+    const s = summarize(sched);
+    if (!s.slots) {
+      chip.classList.add("none"); chip.textContent = "No availability";
+      body.innerHTML = '<div class="summary"><div class="big"><b>No open onsite slots</b> in the next 14 days for ZIP ' + zip + '.</div></div>' +
+        '<div class="meta">Consider confirming the market with the onsite team before routing. Updated 10:42 AM.</div>' +
+        '<div class="viewonly">View only. Scheduling is done by the onsite team after routing.</div>';
+      return;
+    }
+    const open = s.slots >= 15;
+    chip.classList.add(open ? "open" : "limited"); chip.textContent = open ? "Open" : "Limited";
+    body.innerHTML =
+      '<div class="summary"><div class="big">In the next week, there are <b>' + s.slots + ' slots</b> among <b>' + s.techs + ' technician' + (s.techs > 1 ? "s" : "") +
+      '</b> from <b>' + s.first.label + '</b> to <b>' + s.last.label + '</b>, between <b>' + fmtHour(s.minH) + '</b> and <b>' + fmtHour(s.maxH) + '</b>.</div></div>' +
+      '<div class="meta">ZIP ' + zip + ' · Updated 10:42 AM · <button class="link" type="button" id="toggle" aria-expanded="' + detailOpen + '">' + (detailOpen ? "Hide schedule" : "View schedule") + '</button></div>' +
+      (detailOpen ? renderDetail(sched) : "") +
+      '<div class="viewonly">View only. Scheduling is done by the onsite team after routing.</div>';
+  }
+
+  document.addEventListener("click", e => {
+    if (e.target.id === "toggle") { detailOpen = !detailOpen; render(); }
+    if (e.target.id === "retry") { $("state").value = "open"; render(); }
+  });
+  $("state").addEventListener("change", render);
+  $("refresh").addEventListener("click", render);
+  $("zip").addEventListener("keydown", e => { if (e.key === "Enter") render(); });
+  $("calltype").addEventListener("change", () => {
+    const inbound = $("calltype").value === "inbound";
+    $("callchip").textContent = inbound ? "Inbound" : "Offsite outbound";
+    $("methodval").textContent = inbound ? "OFFSITE (inbound call)" : "OFFSITE";
+  });
+  render();
+</script>
+</body>
+</html>
