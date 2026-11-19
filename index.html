@@ -55,6 +55,13 @@
   .pill.open { background: #eaf5ff; color: #006ccf; } .pill.limited { background: #fff1d6; color: #8a5200; } .pill.none { background: #fee2e2; color: #991b1b; }
   .availcard .sentence { font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
   .availcard .sentence b { font-weight: 700; }
+  .availcard .sentence ul { margin: 6px 0 0; padding-left: 18px; }
+  .availcard .sentence li { margin: 2px 0; }
+  .availcard .sentence .guide { margin-top: 8px; }
+  .refresh { font: inherit; font-size: 12px; font-weight: 500; color: #006ccf; background: none; border: 0; padding: 0; margin-top: 8px; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
+  .refresh:hover:not(:disabled) { text-decoration: underline; }
+  .refresh:disabled { color: #8a8985; cursor: default; }
+  .refresh svg { width: 13px; height: 13px; }
   .availcard .foot { margin-top: 12px; font-size: 12px; color: #6e6d6a; line-height: 1.4; }
   .skel { height: 12px; border-radius: 4px; background: linear-gradient(90deg,#ebe9e4,#f7f6f4,#ebe9e4); background-size: 200% 100%; animation: sh 1.2s infinite; margin-bottom: 10px; }
   @keyframes sh { from { background-position: 200% 0; } to { background-position: -200% 0; } }
@@ -162,7 +169,6 @@
       <!-- NEW: Onsite Availability card, under Site Details -->
       <div class="sitecard availcard" id="availCard" aria-label="Onsite availability">
         <div class="title"><span>Onsite Availability</span><span id="availPill"></span></div>
-        <div class="field"><div class="l">Provider ZIP</div><div class="v" id="aZip"></div></div>
         <div id="availBody"></div>
         <div class="foot" id="availFoot"></div>
       </div>
@@ -274,6 +280,10 @@
   const fDate = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); };
   const fTime = s => { const [h,m] = s.split(':').map(Number); return new Date(2000,0,1,h,m).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); };
   const OPEN_THRESHOLD = 15; // placeholder, agree with Ops
+  const fShort = s => { const [y,m,d] = s.split('-'); return m + '/' + d + '/' + y.slice(2); };
+  const REFRESH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>';
+  const footHtml = () => 'View only. Subject to change throughout the day. Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) +
+    '<br><button class="refresh" id="refreshBtn" aria-label="Refresh onsite availability">' + REFRESH_ICON + ' Refresh</button>';
 
   // ---------- state ----------
   const state = { callType: 'Outreach', method: null, site: null, slots: [] };
@@ -331,20 +341,19 @@
   }
 
   // Onsite agents already have the scheduler, so the panel is for every other method
-  function renderAvail() {
+  function renderAvail(busyLabel) {
     const card = $('availCard');
     if (state.callType === 'Outreach' && state.method === 'Onsite') { card.style.display = 'none'; return; }
     card.style.display = 'block';
-    $('aZip').textContent = state.site.zip;
-    $('availPill').innerHTML = ''; $('availBody').innerHTML = '<div class="skel" style="width:90%"></div><div class="skel" style="width:70%"></div>'; $('availFoot').textContent = '';
+    $('availPill').innerHTML = ''; $('availBody').innerHTML = '<div class="skel" style="width:90%"></div><div class="skel" style="width:70%"></div>'; $('availFoot').innerHTML = '<button class="refresh" disabled>' + REFRESH_ICON + ' ' + (busyLabel || 'Loading…') + '</button>';
     setTimeout(paintAvail, 450);
   }
   function paintAvail() {
     const slots = state.slots, n = slots.length;
     if (n === 0) {
       $('availPill').innerHTML = '<span class="pill none">None</span>';
-      $('availBody').innerHTML = '<div class="sentence">No open onsite slots in the next week for this ZIP. Consider confirming capacity with the onsite team before routing.</div>';
-      $('availFoot').textContent = 'View only. Subject to change throughout the day. Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      $('availBody').innerHTML = '<div class="sentence">For provider zip code <b>' + state.site.zip + '</b>:<ul><li>0 slots</li></ul><div class="guide">No open onsite slots in the next week. Consider confirming capacity with the onsite team before routing.</div></div>';
+      $('availFoot').innerHTML = footHtml();
       return;
     }
     const techs = new Set(slots.map(s => s.tech)).size;
@@ -352,10 +361,10 @@
     const open = n >= OPEN_THRESHOLD;
     $('availPill').innerHTML = '<span class="pill ' + (open ? 'open' : 'limited') + '">' + (open ? 'Open' : 'Limited') + '</span>';
     $('availBody').innerHTML =
-      '<div class="sentence">In the next week, there are <b>' + n + ' slot' + (n === 1 ? '' : 's') + '</b> among <b>' + techs + ' technician' + (techs === 1 ? '' : 's') +
-      '</b> from ' + fDate(dates[0]) + ' to ' + fDate(dates[dates.length - 1]) + ', between ' + fTime(starts[0]) + ' and ' + fTime(ends[ends.length - 1]) + '.</div>' +
+      '<div class="sentence">For provider zip code <b>' + state.site.zip + '</b>:<ul><li>' + n + ' slot' + (n === 1 ? '' : 's') + '</li><li>' + techs + ' technician' + (techs === 1 ? '' : 's') +
+      '</li><li>' + (dates[0] === dates[dates.length - 1] ? fShort(dates[0]) : fShort(dates[0]) + ' - ' + fShort(dates[dates.length - 1])) + '</li></ul></div>' +
       '<button class="btn outline block" id="viewSched">View Schedule</button>';
-    $('availFoot').textContent = 'View only. Subject to change throughout the day. Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    $('availFoot').innerHTML = footHtml();
     $('viewSched').onclick = openModal;
   }
   function openModal() {
@@ -364,6 +373,12 @@
     $('mBody').innerHTML = sorted.map(s => '<tr><td>' + fDate(s.date) + '</td><td>' + fTime(s.start) + ' - ' + fTime(s.end) + '</td><td>' + s.tech + '</td></tr>').join('');
     $('overlay').classList.add('open');
   }
+  document.addEventListener('click', e => {
+    if (e.target.closest && e.target.closest('#refreshBtn')) {
+      state.slots = slotsFor(state.site.scenario); // re-grab from the availability endpoint
+      renderAvail('Refreshing…');
+    }
+  });
   $('mClose').onclick = () => $('overlay').classList.remove('open');
   $('overlay').onclick = e => { if (e.target === $('overlay')) $('overlay').classList.remove('open'); };
 
