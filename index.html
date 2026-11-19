@@ -344,7 +344,7 @@
     if (n === 0) {
       $('availPill').innerHTML = '<span class="pill none">None</span>';
       $('availBody').innerHTML = '<div class="sentence">No open onsite slots in the next week for this ZIP. Consider confirming capacity with the onsite team before routing.</div>';
-      $('availFoot').textContent = 'View only. Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      $('availFoot').textContent = 'View only. Subject to change throughout the day. Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
       return;
     }
     const techs = new Set(slots.map(s => s.tech)).size;
@@ -355,7 +355,7 @@
       '<div class="sentence">In the next week, there are <b>' + n + ' slot' + (n === 1 ? '' : 's') + '</b> among <b>' + techs + ' technician' + (techs === 1 ? '' : 's') +
       '</b> from ' + fDate(dates[0]) + ' to ' + fDate(dates[dates.length - 1]) + ', between ' + fTime(starts[0]) + ' and ' + fTime(ends[ends.length - 1]) + '.</div>' +
       '<button class="btn outline block" id="viewSched">View Schedule</button>';
-    $('availFoot').textContent = 'View only. Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    $('availFoot').textContent = 'View only. Subject to change throughout the day. Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     $('viewSched').onclick = openModal;
   }
   function openModal() {
