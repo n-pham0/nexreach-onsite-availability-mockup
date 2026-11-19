@@ -1,282 +1,392 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NexReach – Onsite availability panel (mockup)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NexReach – Onsite Availability panel mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  /* Approximation of the DART tokens used in nexreach-ui. Not the real values. */
-  :root {
-    --text-contrast-high: #161c26;
-    --text-contrast-medium: #3f4a5a;
-    --text-contrast-low: #66717f;
-    --graphic-contrast-low: #dde1e7;
-    --background-page: #f4f5f8;
-    --background-paper: #ffffff;
-    --text-data-blue: #1d5fd1;
-    --background-prominent: #eaf1fd;
-    --text-status-positive: #1b7a43;
-    --background-positive: #e6f4ec;
-    --text-status-caution: #a85d00;
-    --background-caution: #fff1dd;
-    --text-status-negative: #b3261e;
-    --background-negative: #fdeceb;
-  }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: "DM Sans", system-ui, sans-serif; background: var(--background-page);
-         color: var(--text-contrast-high); font-size: 14px; line-height: 20px; }
-  .banner { background: #1f2937; color: #fff; padding: 8px 24px; font-size: 12px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-  .banner strong { color: #ffd479; }
-  .banner label { display: inline-flex; gap: 6px; align-items: center; }
-  .banner select { font: inherit; padding: 2px 6px; border-radius: 4px; border: 0; }
-  nav { background: #fff; border-bottom: 1px solid var(--graphic-contrast-low); padding: 10px 24px; display: flex; align-items: center; gap: 24px; }
-  nav .logo { font-weight: 700; font-size: 16px; color: var(--text-data-blue); }
-  nav span { color: var(--text-contrast-low); }
-  main { max-width: 1180px; margin: 0 auto; padding: 20px 24px 48px; }
-  .callbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-  .callbar h1 { font-size: 20px; line-height: 28px; margin: 0; }
-  .chip { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: var(--background-prominent); color: var(--text-data-blue); }
-  .grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; align-items: start; }
-  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-  .paper { background: var(--background-paper); border-radius: .25rem; border: 1px solid var(--graphic-contrast-low); }
-  .pad { padding: 16px; }
-  .stack { display: flex; flex-direction: column; gap: 12px; }
-  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-  .label { color: var(--text-contrast-low); font-size: 14px; }
-  .value { color: var(--text-contrast-high); }
-  .kv { display: grid; grid-template-columns: 130px 1fr; gap: 6px 12px; }
-  h2 { font-size: 16px; line-height: 24px; margin: 0; }
-  .link { color: var(--text-data-blue); background: none; border: 0; font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; padding: 0; }
-  .link:hover { text-decoration: underline; }
-  .appt { padding: 8px 16px; display: flex; gap: 12px; align-items: center; }
-  .appt b { font-weight: 500; }
+  body { margin: 0; font-family: "DM Sans", sans-serif; color: #242423; background: #fff; height: 100vh; display: flex; flex-direction: column; }
+  .topbar { background: #0b3a53; color: #fff; padding: 8px 20px; font-size: 12px; text-align: right; }
+  .header { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 24px; font-weight: 500; margin: 0; }
+  .btn { font: inherit; font-size: 13px; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+  .btn.outline { background: #fff; border: 1px solid #bdbbb5; color: #242423; }
+  .btn.solid { background: #006ccf; border: 1px solid #006ccf; color: #fff; }
+  .btn.xs { padding: 4px 12px; font-size: 12px; }
+  .btn.outline.prom { border-color: #006ccf; color: #006ccf; }
+  .btn.block { width: 100%; }
 
-  /* The new panel */
-  .panel-head { padding: 12px 16px; border-bottom: 1px solid var(--graphic-contrast-low); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .panel-head .title { display: flex; gap: 8px; align-items: center; font-weight: 700; }
-  .status { padding: 1px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; }
-  .status.open { background: var(--background-positive); color: var(--text-status-positive); }
-  .status.limited { background: var(--background-caution); color: var(--text-status-caution); }
-  .status.none { background: var(--background-negative); color: var(--text-status-negative); }
-  .zipbar { padding: 10px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid var(--graphic-contrast-low); }
-  .zipbar input { font: inherit; width: 88px; padding: 4px 8px; border: 1px solid var(--graphic-contrast-low); border-radius: 4px; }
-  .btn { font: inherit; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 4px; border: 1px solid var(--graphic-contrast-low); background: #fff; color: var(--text-contrast-medium); cursor: pointer; }
-  .btn:hover { background: var(--background-prominent); border-color: var(--text-data-blue); color: var(--text-data-blue); }
-  .summary { padding: 14px 16px; font-size: 14px; }
-  .summary .big { font-size: 15px; line-height: 22px; }
-  .summary b { font-weight: 700; }
-  .meta { padding: 0 16px 12px; color: var(--text-contrast-low); font-size: 12px; }
-  .viewonly { margin: 0 16px 14px; padding: 8px 12px; background: #f7f8fa; border-radius: 4px; color: var(--text-contrast-medium); font-size: 12px; }
-  .detail { border-top: 1px solid var(--graphic-contrast-low); padding: 12px 16px 16px; overflow-x: auto; }
-  table { border-collapse: collapse; width: 100%; font-size: 12px; min-width: 520px; }
-  th, td { border-bottom: 1px solid var(--graphic-contrast-low); padding: 6px 8px; text-align: left; vertical-align: top; }
-  th { color: var(--text-contrast-low); font-weight: 500; white-space: nowrap; }
-  td.tech { font-weight: 500; white-space: nowrap; }
-  td .slot { display: block; white-space: nowrap; }
-  td.empty { color: var(--text-contrast-low); }
-  .daysum th, .daysum td { background: #fafbfc; }
-  .skeleton { height: 12px; border-radius: 4px; background: linear-gradient(90deg, #eceff3, #f7f8fa, #eceff3); background-size: 200% 100%; animation: sh 1.2s infinite; }
+  /* ---------- search screen ---------- */
+  #screen-search { padding: 12px 20px 40px; max-width: 900px; }
+  #screen-search .lbl { font-size: 14px; margin: 18px 0 8px; }
+  .radios { display: flex; gap: 24px; }
+  .radios label { display: inline-flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
+  .radios input { accent-color: #006ccf; width: 16px; height: 16px; margin: 0; }
+  .searchbox { width: 50%; min-width: 320px; position: relative; margin-top: 18px; }
+  .searchbox input { width: 100%; font: inherit; font-size: 14px; padding: 10px 12px 10px 38px; border: 1px solid #8a8985; border-radius: 8px; background: #fff; }
+  .searchbox input:disabled { background: #f7f6f4; border-color: #d4d2cc; cursor: not-allowed; }
+  .searchbox svg { position: absolute; left: 12px; top: 11px; width: 16px; height: 16px; stroke: #6e6d6a; }
+  .hint { font-size: 12px; color: #6e6d6a; margin-top: 8px; line-height: 1.6; }
+  .hint a { color: #006ccf; cursor: pointer; text-decoration: underline dotted; }
+  .err { color: #b3261e; font-size: 12px; margin-top: 6px; display: none; }
+  .loading { margin-top: 16px; font-size: 13px; color: #6e6d6a; display: none; }
+
+  /* ---------- dashboard ---------- */
+  #screen-dash { display: none; flex: 1; flex-direction: column; min-height: 0; }
+  .main { display: flex; flex: 1; overflow: hidden; position: relative; }
+  .sidebar { width: 233px; min-width: 233px; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+  .sitecard { background: #f7f6f4; border-radius: 12px; padding: 20px 16px; }
+  .sitecard .title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 16px; font-weight: 500; }
+  .sitecard .title a { font-size: 12px; color: #006ccf; cursor: pointer; font-weight: 400; }
+  .field { margin-bottom: 14px; font-size: 13px; }
+  .field .l { color: #4f4e4c; }
+  .field .v { line-height: 1.4; white-space: pre-line; }
+  .notecard { margin-top: 16px; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 8px; background: #fff; border: 1px solid #e7e5df; cursor: pointer; }
+  .notecard .left { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; }
+  .notecard svg { width: 14px; height: 14px; }
+  .badge { background: #006ccf; color: #fff; font-size: 11px; font-weight: 600; min-width: 20px; height: 20px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; padding: 0 6px; }
+
+  /* NEW: Onsite Availability card (same card spec as Site Details) */
+  .availcard .title { margin-bottom: 14px; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .pill.green { background: #dcfce7; color: #166534; } .pill.red { background: #fee2e2; color: #991b1b; }
+  .pill.open { background: #eaf5ff; color: #006ccf; } .pill.limited { background: #fff1d6; color: #8a5200; } .pill.none { background: #fee2e2; color: #991b1b; }
+  .availcard .sentence { font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
+  .availcard .sentence b { font-weight: 700; }
+  .availcard .foot { margin-top: 12px; font-size: 12px; color: #6e6d6a; line-height: 1.4; }
+  .skel { height: 12px; border-radius: 4px; background: linear-gradient(90deg,#ebe9e4,#f7f6f4,#ebe9e4); background-size: 200% 100%; animation: sh 1.2s infinite; margin-bottom: 10px; }
   @keyframes sh { from { background-position: 200% 0; } to { background-position: -200% 0; } }
-  .err { color: var(--text-status-negative); font-weight: 500; }
-  .placeholder { margin-top: 16px; padding: 14px 16px; color: var(--text-contrast-low); border-style: dashed; }
-  details.notes { margin-top: 24px; }
-  details.notes summary { cursor: pointer; font-weight: 700; }
-  details.notes ul { margin: 8px 0 0; padding-left: 20px; color: var(--text-contrast-medium); }
-  details.notes li { margin: 4px 0; }
-  .callout { outline: 2px dashed var(--text-data-blue); outline-offset: 4px; }
+
+  .content { flex: 1; padding: 24px; overflow: auto; }
+  .content h2 { font-size: 18px; margin: 0 0 16px; }
+  .content h3 { font-size: 16px; font-weight: 600; margin: 0 0 12px; }
+  .row { display: flex; align-items: center; }
+  .link { color: #006ccf; font-size: 13px; cursor: pointer; }
+  .muted { color: #6e6d6a; font-size: 13px; }
+  hr { border: 0; border-top: 1px solid #e7e5df; margin: 24px 0; }
+  .tabs { display: inline-flex; background: #f7f6f4; border-radius: 20px; padding: 3px; margin-bottom: 20px; }
+  .tabs button { font: inherit; font-size: 13px; border: 0; background: transparent; padding: 6px 16px; border-radius: 16px; cursor: pointer; color: #4f4e4c; }
+  .tabs button.on { background: #006ccf; color: #fff; }
+  .summary { border: 1px solid #e7e5df; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; }
+  .summary .top { font-size: 13px; margin-bottom: 14px; } .summary .top .n { font-size: 20px; font-weight: 700; margin-right: 6px; }
+  .summary .cols { display: flex; flex-wrap: wrap; }
+  .summary .col { padding: 0 24px; border-left: 1px solid #e7e5df; } .summary .col:first-child { padding-left: 0; border-left: 0; }
+  .summary .col .h { font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+  .summary .nums { display: flex; gap: 20px; } .summary .nums .l { font-size: 12px; color: #4f4e4c; } .summary .nums .v { font-size: 16px; font-weight: 700; }
+  .summary .last { margin-top: 14px; font-size: 12px; color: #6e6d6a; }
+  .tablewrap { border: 1px solid #e7e5df; border-radius: 8px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th { text-align: left; font-weight: 500; background: #f7f6f4; padding: 10px 8px; white-space: nowrap; border-bottom: 1px solid #e7e5df; }
+  td { padding: 10px 8px; border-bottom: 1px solid #f0eee9; vertical-align: top; }
+  tbody tr:hover { background: #faf9f7; }
+  .search2 { font: inherit; font-size: 13px; padding: 7px 10px; border: 1px solid #bdbbb5; border-radius: 6px; width: 340px; margin-bottom: 14px; }
+
+  /* modal */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: none; align-items: center; justify-content: center; z-index: 40; }
+  .overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 12px; width: min(720px, 92vw); max-height: 86vh; display: flex; flex-direction: column; box-shadow: 0 12px 40px rgba(0,0,0,.25); }
+  .modal .mh { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px 8px; }
+  .modal .mh .t { font-size: 18px; font-weight: 700; }
+  .modal .mh .x { cursor: pointer; font-size: 18px; color: #6e6d6a; padding: 2px 8px; border-radius: 4px; }
+  .modal .mh .x:hover { background: #f3f2ef; }
+  .modal .mb { padding: 0 24px 22px; overflow: auto; }
+  .modal .note { font-size: 13px; color: #4f4e4c; margin: 4px 0 14px; line-height: 1.5; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #242423; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 13px; display: none; z-index: 50; }
 </style>
 </head>
 <body>
-
-<div class="banner">
-  <span><strong>MOCKUP</strong> · illustrative data only · fictional site and technicians · not wired to OSS or Hub</span>
-  <label>Panel state
-    <select id="state">
-      <option value="open">Open slots</option>
-      <option value="limited">Limited slots</option>
-      <option value="none">No availability</option>
-      <option value="loading">Loading</option>
-      <option value="error">Unavailable</option>
-    </select>
-  </label>
-  <label>Call type
-    <select id="calltype">
-      <option value="offsite">Offsite outbound call</option>
-      <option value="inbound">Inbound call</option>
-    </select>
-  </label>
+<div class="topbar">user@useremail.com · Tenant</div>
+<div class="header">
+  <h1>NexReach</h1>
+  <div style="display:none;gap:12px" id="hdrBtns">
+    <button class="btn outline" id="btnBack">Back to Search</button>
+    <button class="btn solid" data-mock>Finish Outreach</button>
+  </div>
 </div>
 
-<nav><span class="logo">NexReach</span><span>Dashboard</span><span>Search</span><span>Call history</span></nav>
-
-<main>
-  <div class="callbar">
-    <h1>(555) 010-0142</h1>
-    <span class="chip" id="callchip">Offsite outbound</span>
-    <span class="label">Riverside Family Clinic</span>
+<!-- ============ Screen 1: search ============ -->
+<div id="screen-search">
+  <div class="lbl" style="margin-top:6px">Call Type:</div>
+  <div class="radios" id="callType">
+    <label><input type="radio" name="ct" value="Outreach" checked /> Outreach</label>
+    <label><input type="radio" name="ct" value="Inbound" /> Inbound</label>
   </div>
 
-  <div class="grid">
-    <section class="paper pad stack" aria-label="Site details">
-      <div class="row" style="justify-content: space-between">
-        <h2>Site details</h2>
-        <button class="link" type="button">Edit</button>
-      </div>
-      <div class="kv">
-        <span class="label">Site name</span><span class="value">Riverside Family Clinic</span>
-        <span class="label">Address</span><span class="value">1200 Example Ave, Springfield, NC 27401</span>
-        <span class="label">Primary contact</span><span class="value">Front office</span>
-        <span class="label">Retrieval method</span><span class="value" id="methodval">OFFSITE</span>
-        <span class="label">Fax</span><span class="value">555-010-0143</span>
-      </div>
-    </section>
-
-    <div class="stack">
-      <div class="paper appt">
-        <span aria-hidden="true">📅</span><b>1 Existing Appointment</b>
-        <button class="link" type="button">View Details</button>
-      </div>
-
-      <!-- NEW -->
-      <section class="paper callout" aria-label="Onsite availability panel" id="panel">
-        <div class="panel-head">
-          <div class="title"><span aria-hidden="true">🗓️</span> Onsite availability <span class="status" id="statuschip"></span></div>
-          <span class="label" style="font-size:12px">View only</span>
-        </div>
-        <div class="zipbar">
-          <span class="label">Provider ZIP</span>
-          <input id="zip" value="27401" inputmode="numeric" maxlength="5" aria-label="Provider ZIP code">
-          <button class="btn" id="refresh" type="button">Check</button>
-          <span class="label" style="font-size:12px">Prefilled from site details</span>
-        </div>
-        <div id="body"></div>
-      </section>
+  <div id="methodBlock">
+    <div class="lbl">Retrieval Method</div>
+    <div class="radios" id="method">
+      <label><input type="radio" name="rm" value="Offsite" /> Offsite</label>
+      <label><input type="radio" name="rm" value="Onsite" /> Onsite</label>
     </div>
   </div>
 
-  <div class="paper placeholder">Inventory summary and table (unchanged) would appear here, with the Route to Onsite action.</div>
+  <div class="searchbox">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="phone" placeholder="Search by Phone Number" disabled autocomplete="off" />
+  </div>
+  <div class="err" id="err"></div>
+  <div class="loading" id="loading">Searching…</div>
+  <div class="hint" id="hint">
+    Mockup demo numbers (fictional sites):
+    <a data-demo="555-100-0001">555-100-0001</a> open availability ·
+    <a data-demo="555-100-0010">555-100-0010</a> limited ·
+    <a data-demo="555-100-0011">555-100-0011</a> no availability.<br>
+    Select Outreach, then Offsite, type a number and press Enter.
+  </div>
+</div>
 
-  <details class="notes">
-    <summary>Design notes and assumptions</summary>
-    <ul>
-      <li><b>Purpose:</b> let offsite and inbound agents confirm onsite capacity before offering onsite and routing inventory, so we avoid routing into markets without capacity.</li>
-      <li><b>Read only:</b> no scheduling controls. Booking stays with the onsite team after routing.</li>
-      <li><b>Input:</b> the provider ZIP, prefilled from site details. Market matching is assumed to happen inside the OSS stored procedure that already feeds the grid.</li>
-      <li><b>Data:</b> assumes a new OSS endpoint returning open slots (date, start and end time, technician) for a ZIP and date range. Technician names and counts here are made up.</li>
-      <li><b>Slot length:</b> shown as 2-hour windows for illustration. The real length comes from OSS.</li>
-      <li><b>Status thresholds</b> (Open 15+ slots, Limited 1 to 14, None 0): placeholders to agree with Ops.</li>
-      <li><b>Where it shows:</b> offsite and inbound call views, across retrieval methods. Not shown when an onsite scheduler is already open.</li>
-      <li><b>Not designed yet:</b> refresh cadence, offshore agent visibility rules, and whether technician names are shown to all agent groups.</li>
-    </ul>
-  </details>
-</main>
+<!-- ============ Screen 2: dashboard ============ -->
+<div id="screen-dash">
+  <div class="main">
+    <div class="sidebar">
+      <div class="sitecard">
+        <div class="title"><span>Site Details</span><a data-mock>Edit</a></div>
+        <div class="field"><div class="l">Site Name</div><div class="v" id="fName"></div></div>
+        <div class="field"><div class="l">Primary Address</div><div class="v" id="fAddr"></div></div>
+        <div class="field"><div class="l">Phone Number</div><div class="v" id="fPhone"></div></div>
+        <div class="field"><div class="l">Fax Number</div><div class="v" id="fFax"></div></div>
+        <div class="field"><div class="l">Primary Contact</div><div class="v">Front Desk</div></div>
+        <div class="field"><div class="l">Primary Contact Email</div><div class="v">records@example.com</div></div>
+        <div class="field"><div class="l">Preferred Retrieval Method</div><div class="v" id="fMethod"></div></div>
+        <div class="notecard" data-mock>
+          <div class="left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#006ccf" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Agent Notes
+          </div>
+          <span class="badge">2</span>
+        </div>
+      </div>
+
+      <!-- NEW: Onsite Availability card, under Site Details -->
+      <div class="sitecard availcard" id="availCard" aria-label="Onsite availability">
+        <div class="title"><span>Onsite Availability</span><span id="availPill"></span></div>
+        <div class="field"><div class="l">Provider ZIP</div><div class="v" id="aZip"></div></div>
+        <div id="availBody"></div>
+        <div class="foot" id="availFoot"></div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="row" style="justify-content:space-between;margin-bottom:16px"><h2 style="margin:0">Call Actions</h2></div>
+      <div class="row" style="gap:24px;align-items:flex-start;flex-wrap:wrap">
+        <div>
+          <h3>Office Contact Result</h3>
+          <div id="contactInitial" class="row" style="gap:10px">
+            <button class="btn solid xs" id="btnConn">Connected</button>
+            <button class="btn outline xs" id="btnNoConn">Did Not Connect</button>
+          </div>
+          <div id="contactConn" class="row" style="gap:10px;display:none"><span class="pill green">Connected</span><span class="link" data-reset>↺ Change Answer</span></div>
+          <div id="contactNo" class="row" style="gap:10px;display:none"><span class="pill red">Not Connected</span><span class="link" data-reset>↺ Change Answer</span></div>
+        </div>
+        <div style="margin-left:auto"><div class="muted" style="font-size:12px">Reference ID</div><b style="font-size:14px" id="refId"></b></div>
+      </div>
+
+      <hr />
+      <h2>Record Request Actions</h2>
+      <div class="tabs"><button class="on">Workbench</button><button data-mock>Call History</button></div>
+
+      <div class="summary">
+        <div class="top"><span class="n">8</span><b>Record Requests</b> · 3 providers · 2 health plans</div>
+        <div class="cols">
+          <div class="col"><div class="h">⚠ Needs Action</div><div class="nums">
+            <div><div class="l">Past Due</div><div class="v">1</div></div>
+            <div><div class="l">Unscheduled</div><div class="v">5</div></div>
+            <div><div class="l">In Progress-Unblocked</div><div class="v">2</div></div></div></div>
+          <div class="col"><div class="h">Actioned on this Call</div><div class="nums">
+            <div><div class="l">Scheduled</div><div class="v">0</div></div>
+            <div><div class="l">Rerouted</div><div class="v">0</div></div></div></div>
+        </div>
+        <div class="last">Last outreach: 11/12/2026 · Connected · Example, Agent</div>
+      </div>
+
+      <h3>Bulk Actions</h3>
+      <p class="muted" style="margin:0 0 12px">Use the below buttons to apply the same outcome to all record requests within the group.</p>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        <button class="btn outline prom" data-mock>Schedule All</button>
+        <button class="btn outline prom" data-mock>Send All to Research</button>
+        <button class="btn outline prom" data-mock>Reroute All</button>
+        <button class="btn outline prom" data-mock>Pend All</button>
+      </div>
+
+      <hr style="margin:24px 0 20px" />
+      <h3>Individual Outcomes</h3>
+      <p class="muted" style="margin:0 0 16px">Select one to many record requests within the table to apply outcomes.</p>
+      <input class="search2" placeholder="Search by Member Name, Practitioner, Site, or Request ID..." />
+      <div class="tablewrap"><table>
+        <thead><tr><th></th><th>Request ID</th><th>Health Plan</th><th>Member Name</th><th>Member DOB</th><th>Project Due Date</th><th>Status</th><th>Retrieval Method</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule modal -->
+<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="mh"><span class="t" id="mTitle"></span><span class="x" id="mClose" title="Close">✕</span></div>
+    <div class="mb">
+      <p class="note">Open onsite appointment windows for the provider's ZIP. View only: scheduling is done by the onsite team after the inventory is routed to Onsite.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Date</th><th>Time</th><th>Technician</th></tr></thead>
+        <tbody id="mBody"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 
 <script>
-  // Illustrative schedule: day -> technician -> slot start hours (2-hour windows)
-  const DAYS = [
-    { key: "2026-11-23", label: "Mon Nov 23" },
-    { key: "2026-11-24", label: "Tue Nov 24" },
-    { key: "2026-11-25", label: "Wed Nov 25" },
-    { key: "2026-11-26", label: "Thu Nov 26" },
-    { key: "2026-11-27", label: "Fri Nov 27" },
+  const $ = id => document.getElementById(id);
+  const toast = m => { const t = $('toast'); t.textContent = m; t.style.display = 'block'; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = 'none', 2200); };
+
+  // ---------- fictional demo sites ----------
+  const SITES = {
+    '5551000001': { name: 'Springfield Family Medicine', addr: '100 Main St.\nSpringfield, IL 62701', zip: '62701', fax: '555-123-4567', scenario: 'open' },
+    '5551000010': { name: 'Mile High Internal Medicine', addr: '1500 Example St., #200\nDenver, CO 80226', zip: '80226', fax: '555-123-4568', scenario: 'limited' },
+    '5551000011': { name: 'Desert Valley Clinic', addr: '500 Hospital Dr.\nPhoenix, AZ 85004', zip: '85004', fax: '555-123-4569', scenario: 'none' },
+  };
+  const fmtPhone = d => d.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+
+  // ---------- fictional availability (generated for the next 7 days) ----------
+  const TECHS = ['Marcus T.', 'Priya S.', 'Dana R.', 'Luis V.', 'Hannah K.', 'Omar B.'];
+  const WINDOWS = [['08:00','10:00'], ['10:00','12:00'], ['12:00','14:00'], ['14:00','16:00']];
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  function weekdays() {
+    const out = [], base = new Date();
+    for (let i = 1; i <= 7; i++) { const d = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i); if (d.getDay() % 6 !== 0) out.push(iso(d)); }
+    return out;
+  }
+  function slotsFor(scenario) {
+    const days = weekdays();
+    if (scenario === 'none') return [];
+    if (scenario === 'limited') return [
+      { date: days[1], start: '10:00', end: '12:00', tech: 'Luis V.' },
+      { date: days[2], start: '12:00', end: '14:00', tech: 'Priya S.' },
+      { date: days[2], start: '14:00', end: '16:00', tech: 'Priya S.' } ];
+    const out = [];
+    days.forEach((date, di) => TECHS.forEach((tech, ti) => WINDOWS.forEach(([start, end], wi) => {
+      if ((di + ti + wi) % 4 === 0) out.push({ date, start, end, tech });
+    })));
+    return out;
+  }
+  const fDate = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); };
+  const fTime = s => { const [h,m] = s.split(':').map(Number); return new Date(2000,0,1,h,m).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); };
+  const OPEN_THRESHOLD = 15; // placeholder, agree with Ops
+
+  // ---------- state ----------
+  const state = { callType: 'Outreach', method: null, site: null, slots: [] };
+
+  // ---------- search screen ----------
+  const ctRadios = document.querySelectorAll('input[name=ct]'), rmRadios = document.querySelectorAll('input[name=rm]');
+  function syncSearch() {
+    state.callType = document.querySelector('input[name=ct]:checked').value;
+    const m = document.querySelector('input[name=rm]:checked');
+    state.method = state.callType === 'Inbound' ? null : (m ? m.value : null);
+    $('methodBlock').style.display = state.callType === 'Outreach' ? 'block' : 'none';
+    $('phone').disabled = state.callType === 'Outreach' && !state.method;
+    $('err').style.display = 'none';
+  }
+  ctRadios.forEach(r => r.onchange = syncSearch); rmRadios.forEach(r => r.onchange = syncSearch);
+  document.querySelectorAll('[data-demo]').forEach(a => a.onclick = () => {
+    if (state.callType === 'Outreach' && !state.method) { document.querySelector('input[name=rm][value=Offsite]').checked = true; syncSearch(); }
+    $('phone').value = a.dataset.demo; $('phone').focus();
+  });
+  $('phone').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+  function doSearch() {
+    const digits = $('phone').value.replace(/\D/g, '');
+    $('err').style.display = 'none';
+    if (digits.length !== 10) { $('err').textContent = 'Please enter a valid 10-digit phone number.'; $('err').style.display = 'block'; return; }
+    const site = SITES[digits];
+    if (!site) { $('err').textContent = 'No inventory found for this search, please contact support. (Mockup: try a demo number above.)'; $('err').style.display = 'block'; return; }
+    $('loading').style.display = 'block';
+    setTimeout(() => { $('loading').style.display = 'none'; showDash(digits, site); }, 500);
+  }
+
+  // ---------- dashboard ----------
+  const ROWS = [
+    ['ST-1001', 'Health Plan A', 'Alex Rivera', '1961-04-12', '11/20/2026', 'Unscheduled'],
+    ['ST-1002', 'Health Plan A', 'Jordan Lee', '1954-09-30', '11/25/2026', 'Unscheduled'],
+    ['ST-1003', 'Health Plan B', 'Sam Patel', '1972-01-18', '12/02/2026', 'Unscheduled'],
+    ['ST-1004', 'Health Plan A', 'Casey Morgan', '1968-07-05', '11/10/2026', 'Past Due'],
+    ['ST-1005', 'Health Plan B', 'Taylor Brooks', '1949-12-22', '12/05/2026', 'Unscheduled'],
+    ['ST-1006', 'Health Plan A', 'Riley Chen', '1980-03-09', '12/09/2026', 'In Progress'],
+    ['ST-1007', 'Health Plan B', 'Morgan Diaz', '1957-06-27', '12/09/2026', 'In Progress'],
+    ['ST-1008', 'Health Plan A', 'Avery Kim', '1963-11-14', '12/12/2026', 'Unscheduled'],
   ];
-  const SCHEDULES = {
-    open: {
-      "2026-11-23": { "Marcus T.": [8, 10, 14], "Priya S.": [10, 12], "Dana R.": [8, 14] },
-      "2026-11-24": { "Marcus T.": [8, 10], "Luis V.": [10, 12, 14], "Hannah K.": [8, 12] },
-      "2026-11-25": { "Priya S.": [8, 10, 12], "Omar B.": [12, 14], "Dana R.": [10] },
-      "2026-11-26": {},
-      "2026-11-27": { "Luis V.": [8, 10], "Hannah K.": [10] },
-    },
-    limited: {
-      "2026-11-24": { "Luis V.": [10] },
-      "2026-11-25": { "Priya S.": [12, 14] },
-    },
-    none: {},
+
+  function showDash(digits, site) {
+    state.site = site; state.slots = slotsFor(site.scenario);
+    $('screen-search').style.display = 'none';
+    $('screen-dash').style.display = 'flex'; $('hdrBtns').style.display = 'flex';
+    $('fName').textContent = site.name; $('fAddr').textContent = site.addr;
+    $('fPhone').textContent = fmtPhone(digits); $('fFax').textContent = site.fax;
+    const methodLabel = state.callType === 'Inbound' ? 'Offsite' : state.method;
+    $('fMethod').textContent = methodLabel;
+    $('refId').textContent = fmtPhone(digits);
+    $('tbody').innerHTML = ROWS.map(r => '<tr><td><input type="checkbox" /></td>' + r.map(c => '<td>' + c + '</td>').join('') + '<td>' + methodLabel + '</td></tr>').join('');
+    renderAvail();
+  }
+
+  // Onsite agents already have the scheduler, so the panel is for every other method
+  function renderAvail() {
+    const card = $('availCard');
+    if (state.callType === 'Outreach' && state.method === 'Onsite') { card.style.display = 'none'; return; }
+    card.style.display = 'block';
+    $('aZip').textContent = state.site.zip;
+    $('availPill').innerHTML = ''; $('availBody').innerHTML = '<div class="skel" style="width:90%"></div><div class="skel" style="width:70%"></div>'; $('availFoot').textContent = '';
+    setTimeout(paintAvail, 450);
+  }
+  function paintAvail() {
+    const slots = state.slots, n = slots.length;
+    if (n === 0) {
+      $('availPill').innerHTML = '<span class="pill none">None</span>';
+      $('availBody').innerHTML = '<div class="sentence">No open onsite slots in the next week for this ZIP. Consider confirming capacity with the onsite team before routing.</div>';
+      $('availFoot').textContent = 'View only. Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      return;
+    }
+    const techs = new Set(slots.map(s => s.tech)).size;
+    const dates = slots.map(s => s.date).sort(), starts = slots.map(s => s.start).sort(), ends = slots.map(s => s.end).sort();
+    const open = n >= OPEN_THRESHOLD;
+    $('availPill').innerHTML = '<span class="pill ' + (open ? 'open' : 'limited') + '">' + (open ? 'Open' : 'Limited') + '</span>';
+    $('availBody').innerHTML =
+      '<div class="sentence">In the next week, there are <b>' + n + ' slot' + (n === 1 ? '' : 's') + '</b> among <b>' + techs + ' technician' + (techs === 1 ? '' : 's') +
+      '</b> from ' + fDate(dates[0]) + ' to ' + fDate(dates[dates.length - 1]) + ', between ' + fTime(starts[0]) + ' and ' + fTime(ends[ends.length - 1]) + '.</div>' +
+      '<button class="btn outline block" id="viewSched">View Schedule</button>';
+    $('availFoot').textContent = 'View only. Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    $('viewSched').onclick = openModal;
+  }
+  function openModal() {
+    $('mTitle').textContent = 'Onsite Availability for ' + state.site.zip;
+    const sorted = [...state.slots].sort((a, b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start) || a.tech.localeCompare(b.tech));
+    $('mBody').innerHTML = sorted.map(s => '<tr><td>' + fDate(s.date) + '</td><td>' + fTime(s.start) + ' - ' + fTime(s.end) + '</td><td>' + s.tech + '</td></tr>').join('');
+    $('overlay').classList.add('open');
+  }
+  $('mClose').onclick = () => $('overlay').classList.remove('open');
+  $('overlay').onclick = e => { if (e.target === $('overlay')) $('overlay').classList.remove('open'); };
+
+  // call result + misc
+  const showContact = v => { $('contactInitial').style.display = v === null ? 'flex' : 'none'; $('contactConn').style.display = v === 'c' ? 'flex' : 'none'; $('contactNo').style.display = v === 'n' ? 'flex' : 'none'; };
+  $('btnConn').onclick = () => showContact('c'); $('btnNoConn').onclick = () => showContact('n');
+  document.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => showContact(null));
+  document.querySelectorAll('[data-mock]').forEach(b => b.addEventListener('click', () => toast('Not part of this mockup')));
+  $('btnBack').onclick = () => {
+    $('screen-dash').style.display = 'none'; $('hdrBtns').style.display = 'none'; $('screen-search').style.display = 'block';
+    $('overlay').classList.remove('open'); $('phone').value = ''; showContact(null);
   };
 
-  const fmtHour = h => { const hh = ((h + 11) % 12) + 1; return hh + ":00 " + (h < 12 ? "AM" : "PM"); };
-  const fmtSlot = h => fmtHour(h).replace(":00", "").replace(" AM", "").replace(" PM", "") + "–" + fmtHour(h + 2).replace(":00", "");
-
-  const $ = id => document.getElementById(id);
-
-  function summarize(sched) {
-    let slots = 0, techs = new Set(), minH = 99, maxH = 0, days = [];
-    DAYS.forEach(d => {
-      const day = sched[d.key] || {};
-      let n = 0;
-      Object.entries(day).forEach(([t, hrs]) => { hrs.forEach(h => { n++; minH = Math.min(minH, h); maxH = Math.max(maxH, h + 2); }); if (hrs.length) techs.add(t); });
-      if (n) days.push(d);
-      slots += n;
-    });
-    return { slots, techs: techs.size, minH, maxH, first: days[0], last: days[days.length - 1] };
-  }
-
-  let detailOpen = false;
-
-  function renderDetail(sched) {
-    const techs = [...new Set(DAYS.flatMap(d => Object.keys(sched[d.key] || {})))];
-    let html = '<div class="detail"><table><thead><tr><th>Technician</th>' + DAYS.map(d => "<th>" + d.label + "</th>").join("") + "</tr></thead><tbody>";
-    html += '<tr class="daysum"><th>Open slots</th>' + DAYS.map(d => {
-      const n = Object.values(sched[d.key] || {}).reduce((a, h) => a + h.length, 0);
-      return "<td>" + (n || "—") + "</td>";
-    }).join("") + "</tr>";
-    techs.forEach(t => {
-      html += '<tr><td class="tech">' + t + "</td>" + DAYS.map(d => {
-        const hrs = (sched[d.key] || {})[t];
-        return hrs && hrs.length ? "<td>" + hrs.map(h => '<span class="slot">' + fmtSlot(h) + "</span>").join("") + "</td>" : '<td class="empty">—</td>';
-      }).join("") + "</tr>";
-    });
-    html += "</tbody></table><p class=\"label\" style=\"font-size:12px;margin:8px 0 0\">Thu Nov 26 is a holiday in this example. Times are in the site's local time zone.</p></div>";
-    return html;
-  }
-
-  function render() {
-    const state = $("state").value, zip = $("zip").value || "—";
-    const body = $("body"), chip = $("statuschip");
-    chip.className = "status"; chip.textContent = "";
-    if (state === "loading") {
-      body.innerHTML = '<div class="summary stack"><div class="skeleton" style="width:90%"></div><div class="skeleton" style="width:70%"></div></div>';
-      return;
-    }
-    if (state === "error") {
-      body.innerHTML = '<div class="summary"><span class="err">Onsite availability unavailable.</span> <button class="link" type="button" id="retry">Retry</button><div class="label" style="margin-top:4px">You can still route inventory to Onsite.</div></div>';
-      return;
-    }
-    const sched = SCHEDULES[state];
-    const s = summarize(sched);
-    if (!s.slots) {
-      chip.classList.add("none"); chip.textContent = "No availability";
-      body.innerHTML = '<div class="summary"><div class="big"><b>No open onsite slots</b> in the next 14 days for ZIP ' + zip + '.</div></div>' +
-        '<div class="meta">Consider confirming the market with the onsite team before routing. Updated 10:42 AM.</div>' +
-        '<div class="viewonly">View only. Scheduling is done by the onsite team after routing.</div>';
-      return;
-    }
-    const open = s.slots >= 15;
-    chip.classList.add(open ? "open" : "limited"); chip.textContent = open ? "Open" : "Limited";
-    body.innerHTML =
-      '<div class="summary"><div class="big">In the next week, there are <b>' + s.slots + ' slots</b> among <b>' + s.techs + ' technician' + (s.techs > 1 ? "s" : "") +
-      '</b> from <b>' + s.first.label + '</b> to <b>' + s.last.label + '</b>, between <b>' + fmtHour(s.minH) + '</b> and <b>' + fmtHour(s.maxH) + '</b>.</div></div>' +
-      '<div class="meta">ZIP ' + zip + ' · Updated 10:42 AM · <button class="link" type="button" id="toggle" aria-expanded="' + detailOpen + '">' + (detailOpen ? "Hide schedule" : "View schedule") + '</button></div>' +
-      (detailOpen ? renderDetail(sched) : "") +
-      '<div class="viewonly">View only. Scheduling is done by the onsite team after routing.</div>';
-  }
-
-  document.addEventListener("click", e => {
-    if (e.target.id === "toggle") { detailOpen = !detailOpen; render(); }
-    if (e.target.id === "retry") { $("state").value = "open"; render(); }
-  });
-  $("state").addEventListener("change", render);
-  $("refresh").addEventListener("click", render);
-  $("zip").addEventListener("keydown", e => { if (e.key === "Enter") render(); });
-  $("calltype").addEventListener("change", () => {
-    const inbound = $("calltype").value === "inbound";
-    $("callchip").textContent = inbound ? "Inbound" : "Offsite outbound";
-    $("methodval").textContent = inbound ? "OFFSITE (inbound call)" : "OFFSITE";
-  });
-  render();
+  // optional deep link for screenshots: #phone=5551000001&type=Outreach&method=Offsite[&modal=1]
+  (function () {
+    const p = new URLSearchParams(location.hash.slice(1));
+    if (!p.get('phone')) { syncSearch(); return; }
+    document.querySelector('input[name=ct][value=' + (p.get('type') || 'Outreach') + ']').checked = true;
+    if (p.get('method')) document.querySelector('input[name=rm][value=' + p.get('method') + ']').checked = true;
+    syncSearch(); $('phone').value = p.get('phone');
+    const site = SITES[p.get('phone').replace(/\D/g, '')];
+    if (site) { showDash(p.get('phone').replace(/\D/g, ''), site); if (p.get('modal')) setTimeout(openModal, 700); }
+  })();
 </script>
 </body>
 </html>
